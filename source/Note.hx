@@ -122,14 +122,6 @@ class Note extends FlxSprite
 				updateHitbox();
 				antialiasing = true;
 		}
-		}
-		else{
-			loadGraphic(Paths.image('warningNote'));
-			setGraphicSize(Std.int(width * 0.7));
-			updateHitbox();
-			antialiasing = true;
-		}
-
 		switch (noteData)
 		{
 			case 0:
@@ -144,6 +136,24 @@ class Note extends FlxSprite
 			case 3:
 				x += swagWidth * 3;
 				animation.play('redScroll');
+		}
+		}
+		else{
+			loadGraphic(Paths.image('warningNote'));
+			setGraphicSize(Std.int(width * 0.7));
+			updateHitbox();
+			antialiasing = true;
+			switch (noteData)
+			{
+				case 0:
+					x += swagWidth * 0;
+				case 1:
+					x += swagWidth * 1;
+				case 2:
+					x += swagWidth * 2;
+				case 3:
+					x += swagWidth * 3;
+			}
 		}
 
 		// trace(prevNote);

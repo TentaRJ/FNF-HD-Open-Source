@@ -1435,6 +1435,7 @@ class PlayState extends MusicBeatState
 			{
 				var daStrumTime:Float = songNotes[0];
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
+				var daGun:Bool=songNotes[3];
 
 				var gottaHitNote:Bool = section.mustHitSection;
 
@@ -1449,7 +1450,7 @@ class PlayState extends MusicBeatState
 				else
 					oldNote = null;
 
-				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote);
+				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, daGun);
 				swagNote.sustainLength = songNotes[2];
 				swagNote.scrollFactor.set(0, 0);
 
@@ -1462,7 +1463,7 @@ class PlayState extends MusicBeatState
 				{
 					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
-					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true);
+					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false);
 					sustainNote.scrollFactor.set();
 					unspawnNotes.push(sustainNote);
 
@@ -2322,8 +2323,12 @@ class PlayState extends MusicBeatState
 	
 						if (daNote.tooLate || !daNote.wasGoodHit){
 								
-							if(daNote.warning && (SONG.song.toLowerCase() == 'blammed' ||SONG.song.toLowerCase() == 'milf')) 
+							if(daNote.warning)
+							{
+								if(SONG.song.toLowerCase() == 'blammed' && dad.curCharacter=="pico"){blammedShoot();} 
+								if(SONG.song.toLowerCase() == 'milf' && dad.curCharacter=="mom-car-horny"){milfShoot();} 
 								health -= 1 * Config.healthDrainMultiplier;
+							}
 							else
 								health -= 0.0475 * Config.healthDrainMultiplier;
 							misses += 1;
@@ -3329,8 +3334,7 @@ class PlayState extends MusicBeatState
 			notes.sort(FlxSort.byY, FlxSort.DESCENDING);
 		}
 		
-	if (curSong.toLowerCase() == 'fresh' || curSong.toLowerCase() == 'dadbattle' )
-		freshCrowd.animation.play('crowdBopFresh', true);
+		if (curSong.toLowerCase() == 'fresh' || curSong.toLowerCase() == 'dadbattle' ){freshCrowd.animation.play('crowdBopFresh', true);}
 
 		if (SONG.notes[Math.floor(curStep / 16)] != null)
 		{
@@ -3368,6 +3372,7 @@ class PlayState extends MusicBeatState
 		//seriously why do they bop on every beat it kinda looks ass nm
 		//smokey you're dumb
 		//fuck you too bird man
+		//aww what a sweet dev team <3
 
 		if (curBeat % 1 == 0){
 			iconBop();
@@ -3399,29 +3404,14 @@ class PlayState extends MusicBeatState
 		if (curSong == 'Blammed' && dad.curCharacter == "pico" && !inCutscene && !gameEnd)
 		{
 			if(shootBeats.contains(curBeat)){
-				FlxG.sound.play(Paths.sound("shooters", "week3"), 1);
-				dad.playAnim("shoot", true);
-				FlxG.camera.shake(0.01, 0.15);
-				new FlxTimer().start(0.3, function(tmr:FlxTimer)
-				{
-					dad.playAnim("idle", true);
-				});
+				blammedShoot();
 			}
 		}
 		if (curSong == 'Milf' && dad.curCharacter == "mom-car-horny" && !inCutscene && !gameEnd)
 		{
 			
 			if (shootBeatsMilf.contains(curBeat) && !gameEnd){
-				FlxG.sound.play(Paths.sound("laser", "week4"), 1);
-				dad.playAnim("shootThatMF", true);
-				var camx = camFollow.x;
-				FlxTween.tween(camFollow, {x: camx+100}, 0.3, {ease:FlxEase.sineOut,type:FlxTweenType.BACKWARD});
-				FlxG.camera.shake(0.01, 0.15);
-				FlxG.camera.scroll.x += 30;
-				new FlxTimer().start(0.3, function(tmr:FlxTimer)
-				{
-					dad.playAnim("idle", true);
-				});
+				milfShoot();
 			}
 		}
 
@@ -3616,4 +3606,30 @@ class PlayState extends MusicBeatState
 		trace('Removing the dancers');
 		}
 	}
+
+	function milfShoot()
+	{
+		FlxG.sound.play(Paths.sound("laser", "week4"), 1);
+		dad.playAnim("shootThatMF", true);
+		var camx = camFollow.x;
+		FlxTween.tween(camFollow, {x: camx+100}, 0.3, {ease:FlxEase.sineOut,type:FlxTweenType.BACKWARD});
+		FlxG.camera.shake(0.01, 0.15);
+		FlxG.camera.scroll.x += 30;
+		new FlxTimer().start(0.3, function(tmr:FlxTimer)
+		{
+			dad.playAnim("idle", true);
+		});
+	}
+
+	function blammedShoot()
+	{
+		FlxG.sound.play(Paths.sound("shooters", "week3"), 1);
+		dad.playAnim("shoot", true);
+		FlxG.camera.shake(0.01, 0.15);
+		new FlxTimer().start(0.3, function(tmr:FlxTimer)
+		{
+			dad.playAnim("idle", true);
+		});
+	}
+
 }
