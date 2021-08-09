@@ -2325,8 +2325,8 @@ class PlayState extends MusicBeatState
 								
 							if(daNote.warning)
 							{
-								if(SONG.song.toLowerCase() == 'blammed' && dad.curCharacter=="pico"){blammedShoot();} 
-								if(SONG.song.toLowerCase() == 'milf' && dad.curCharacter=="mom-car-horny"){milfShoot();} 
+								if(dad.curCharacter=="pico"){blammedShoot();} 
+								if(dad.curCharacter=="mom-car-horny"){milfShoot();} 
 								health -= 1 * Config.healthDrainMultiplier;
 							}
 							else
